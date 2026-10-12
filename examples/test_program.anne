@@ -1,0 +1,47 @@
+# Load the sales dataset.
+data sales = read "test_sales.csv";
+
+# Display the original dataset.
+sales.show();
+
+# Inspect the schema.
+sales.schema();
+
+# Display the dataset dimensions.
+sales.shape();
+
+# Filter expensive products.
+data expensive = sales.filter(price > 1000);
+
+expensive.show();
+
+# Calculate revenue for every transaction.
+data calculated = sales.derive(
+    revenue = price * quantity
+);
+
+calculated.show();
+
+# Calculate revenue for each region.
+data regional_report = calculated
+    .group_by(region)
+    .summarize(
+        total_revenue = sum(revenue),
+        average_price = mean(price),
+        transaction_count = count()
+    );
+
+# Sort regions by total revenue.
+data sorted_report = regional_report.sort(
+    total_revenue,
+    desc
+);
+
+# Display the final report.
+sorted_report.show();
+
+# Export the report.
+sorted_report.save("regional_report.csv");
+
+# Export the expensive transactions.
+expensive.save("expensive_sales.csv");

@@ -1,0 +1,65 @@
+start: statement*
+
+statement: data_decl
+         | action_stmt
+
+data_decl: "data" NAME "=" source ";"
+action_stmt: chain ";"
+
+?source: read_expr
+       | chain
+
+read_expr: "read" STRING read_opts?
+read_opts: "with" "(" args? ")"
+
+chain: NAME method_call*
+method_call: "." NAME "(" args? ")"
+
+args: arg ("," arg)* ","?
+arg: NAME "=" expr -> kwarg
+   | expr -> pos
+
+?expr: or_expr
+?or_expr: and_expr
+        | or_expr "or" and_expr -> or_op
+?and_expr: not_expr
+         | and_expr "and" not_expr -> and_op
+?not_expr: comparison
+         | "not" not_expr -> not_op
+?comparison: sum
+           | sum "==" sum -> eq
+           | sum "!=" sum -> ne
+           | sum "<=" sum -> le
+           | sum ">=" sum -> ge
+           | sum "<" sum -> lt
+           | sum ">" sum -> gt
+?sum: product
+    | sum "+" product -> add
+    | sum "-" product -> sub
+?product: unary
+        | product "*" unary -> mul
+        | product "/" unary -> div
+        | product "%" unary -> mod
+?unary: atom
+      | "-" unary -> neg
+?atom: INT -> int_lit
+     | FLOAT -> float_lit
+     | STRING -> str_lit
+     | TRUE -> true_lit
+     | FALSE -> false_lit
+     | NAME -> name_ref
+     | NAME "(" args? ")" -> call
+     | "(" expr ")"
+     | "[" [expr ("," expr)*] "]" -> list_lit
+
+TRUE: "true"
+FALSE: "false"
+NAME: /[A-Za-z_][A-Za-z_0-9]*/
+INT: /[0-9]+/
+FLOAT: /[0-9]+\.[0-9]+/
+STRING: /"(\\.|[^"\\\n])*"/
+COMMENT: /#[^\n]*/
+
+%import common.WS
+%ignore WS
+%ignore COMMENT

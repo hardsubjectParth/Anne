@@ -1,0 +1,7 @@
+polars>=1.0
+lark>=1.1
+fastexcel>=0.10
+
+[dev]
+pytest>=7
+xlsxwriter>=3

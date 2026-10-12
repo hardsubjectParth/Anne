@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sweet-anne"
+version = "0.1.0"
+description = "Sweet: a compiler for Anne, a dataset-oriented language executed on Polars"
+requires-python = ">=3.10"
+dependencies = ["polars>=1.0", "lark>=1.1", "fastexcel>=0.10"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "xlsxwriter>=3"]
+
+[project.scripts]
+sweet = "sweet.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+sweet = ["frontend/*.lark"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

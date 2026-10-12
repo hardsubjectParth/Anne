@@ -1,0 +1,33 @@
+# Run:  sweet examples/analysis.anne -o examples/results
+data sales = read "sales.csv";
+
+sales.schema();
+sales.describe();
+
+data expensive = sales
+    .filter(price > 1000)
+    .select(customer, price)
+    .sort(price, desc)
+    .limit(10);
+expensive.show();
+expensive.save("expensive.csv");
+
+data affordable = sales.filter(price <= 1000);
+affordable.show();
+
+data report = sales
+    .filter(price > 100)
+    .derive(total = price * quantity)
+    .group_by(region)
+    .summarize(revenue = sum(total), orders = count(), average = mean(total))
+    .sort(revenue, desc);
+report.show();
+report.save("report.csv");
+
+data customers = read "customers.csv";
+data orders = read "orders.csv";
+data joined = orders.join(customers, on = customer_id, how = "left");
+joined.show();
+
+# constant folding (100 * 2 -> 200) and filter fusion show up in the optimized plan:
+orders.filter(amount > 100 * 2).filter(customer_id < 5).explain();

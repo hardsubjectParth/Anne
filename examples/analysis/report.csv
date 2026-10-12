@@ -1,0 +1,5 @@
+region,revenue,orders,average
+east,8500,2,4250.0
+north,3600,2,1800.0
+west,2002,1,2002.0
+south,300,1,300.0

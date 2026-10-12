@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: sweet-anne
+Version: 0.1.0
+Summary: Sweet: a compiler for Anne, a dataset-oriented language executed on Polars
+Requires-Python: >=3.10
+Requires-Dist: polars>=1.0
+Requires-Dist: lark>=1.1
+Requires-Dist: fastexcel>=0.10
+Provides-Extra: dev
+Requires-Dist: pytest>=7; extra == "dev"
+Requires-Dist: xlsxwriter>=3; extra == "dev"
